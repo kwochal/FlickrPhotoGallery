@@ -31,7 +31,7 @@ import coil.compose.rememberImagePainter
 fun MainScreen(viewModel: MainViewModel ) {
     val context = LocalContext.current
     val pullRefreshState = rememberPullRefreshState(viewModel.isRefreshing, {
-        viewModel.isRefreshing=true;
+        viewModel.isRefreshing=true
         viewModel.fetchPublicPhotos()
         Toast.makeText(context, "Odświeżono", Toast.LENGTH_SHORT).show()
         viewModel.isRefreshing=false})
@@ -44,7 +44,6 @@ fun MainScreen(viewModel: MainViewModel ) {
         val photos by rememberUpdatedState(newValue = viewModel.photos.value)
 
         LaunchedEffect(true) {
-
             if (photos.isEmpty()) {
                 viewModel.fetchPublicPhotos()
             }
@@ -104,135 +103,3 @@ fun PhotoItem(photo: Photo) {
     }
 }
 
-/*
-data class Photo (
-    @SerializedName("title") val title: String,
-    @SerializedName("description") val description: String,
-    @SerializedName("link") val link: String,
-    @SerializedName("media") val media: String
-)
-*/
-/*
-@Composable
-fun Gallery() {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://www.flickr.com/services/feeds/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    // Utwórz instancję interfejsu FlickrService
-    val flickrService = retrofit.create(FlickrService::class.java)
-
-    // Wywołaj metodę z interfejsu, aby pobrać publiczne zdjęcia z API
-    val call = flickrService.getPublicPhotos()
-
-    // Wykonaj zapytanie synchronicznie (w rzeczywistych projektach zaleca się korzystanie z asynchronicznych zapytań)
-    val response = call.execute()
-
-    if (response.isSuccessful) {
-        val flickrResponse = response.body()
-        flickrResponse?.items?.forEach { photo ->
-            println("Title: ${photo.title}")
-            println("URL: ${photo.media.url}")
-            println()
-        }
-    } else {
-        println("Error: ${response.code()}")
-    }
-    /*
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Flickr Public Feed Gallery",
-
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn {
-            items(photos) { photo ->
-                PhotoItem(photo = photo)
-            }
-        }
-    }
-    */
-
-}
-
-@Composable
-fun PhotoItem(photo: Photo) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-
-    ) {
-        Column {
-            val painter = rememberImagePainter(
-                data = photo.media,
-                builder = {
-                    crossfade(true)
-                }
-            )
-
-            Image(
-                painter = painter,
-                contentDescription = photo.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(shape = MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop,
-            )
-            Text(
-                text = photo.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-            )
-
-            Text(
-                text = photo.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-
-                color = Color.Blue,
-                textDecoration = TextDecoration.LineThrough
-            )
-        }
-    }
-}
-
-
-/*
-
-suspend fun fetchData(onSuccess: (List<Photo>) -> Unit) {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://www.flickr.com/services/feeds/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val flickrService = retrofit.create(FlickrService::class.java)
-
-    try {
-        val response = flickrService.getPublicPhotos()
-
-        if (response != null) {
-            if (response.isSuccessful) {
-                val photoList = response.body()?.photos
-                if (photoList != null) {
-                    onSuccess(photoList)
-                } else {
-
-                }
-            } else {
-            }
-        }
-    } catch (e: Exception) {
-
-    }
-}*/

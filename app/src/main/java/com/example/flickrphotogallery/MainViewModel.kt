@@ -15,7 +15,7 @@ class MainViewModel : ViewModel() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val flickrService = retrofit.create(FlickrService::class.java)
+    private var flickrService : FlickrService = retrofit.create(FlickrService::class.java)
 
     private val _photos = mutableStateOf<List<Photo>>(emptyList())
     val photos: State<List<Photo>> = _photos
@@ -25,8 +25,11 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             val response = flickrService.getPublicPhotos()
             _photos.value = response.items
-
         }
+    }
+
+    fun setFlickrService(newService : FlickrService) {
+        flickrService = newService;
     }
 
 }
