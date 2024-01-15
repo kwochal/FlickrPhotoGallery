@@ -1,19 +1,14 @@
 package com.example.flickrphotogallery
 
-import junit.framework.TestCase
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+
 
 class MainViewModelTest {
 
@@ -22,13 +17,12 @@ class MainViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(Dispatchers.Default)
-        viewModel = MainViewModel()
     }
 
     @Test
     fun testFetchPublicPhotos_Success() = runBlocking {
         val flickrService = Mockito.mock(FlickrService::class.java)
-        viewModel.setFlickrService(flickrService)
+        viewModel = MainViewModel(flickrService)
         val mockResponse = PhotoResponse(items = listOf(Photo("Title", "Link",Media("URL"), "Author", "tag1 tag2")))
         Mockito.`when`(flickrService.getPublicPhotos()).thenReturn(mockResponse)
 

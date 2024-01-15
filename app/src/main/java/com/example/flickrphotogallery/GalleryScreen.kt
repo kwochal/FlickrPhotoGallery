@@ -17,32 +17,29 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel ) {
+fun MainScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
     val pullRefreshState = rememberPullRefreshState(viewModel.isRefreshing, {
-        viewModel.isRefreshing=true
         viewModel.fetchPublicPhotos()
-        Toast.makeText(context, "Odświeżono", Toast.LENGTH_SHORT).show()
-        viewModel.isRefreshing=false})
+        Toast.makeText(context, R.string.refreshed, Toast.LENGTH_SHORT).show()
+        })
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(dimensionResource(R.dimen.medium_padding))
             .pullRefresh(pullRefreshState)
     ) {
-        val photos by rememberUpdatedState(newValue = viewModel.photos.value)
-
+        val photos = viewModel.photos.value
         LaunchedEffect(true) {
             if (photos.isEmpty()) {
                 viewModel.fetchPublicPhotos()
@@ -59,14 +56,13 @@ fun MainScreen(viewModel: MainViewModel ) {
         state = pullRefreshState
     )
 }
-
 @Composable
 fun PhotoItem(photo: Photo) {
-
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(dimensionResource(R.dimen.small_padding)),
     ) {
         Column {
             Image(
@@ -77,26 +73,26 @@ fun PhotoItem(photo: Photo) {
                     .height(300.dp),
                 contentScale = ContentScale.Fit
             )
-            if(photo.title!="") {
+            if(!photo.title.isNullOrEmpty()) {
                 Text(
                     text = photo.title,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(dimensionResource(R.dimen.small_padding)),
                 )
             }
             Text(
-                text = "author: ${photo.getCleanAuthor()}",
+                text = context.getString(R.string.author, photo.getCleanAuthor()),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(dimensionResource(R.dimen.small_padding))
             )
-            if(photo.tags!="") {
+            if(!photo.tags.isNullOrEmpty()) {
                 Text(
-                    text = "tags: "+photo.tags,
+                    text = context.getString(R.string.tags, photo.tags),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(dimensionResource(R.dimen.small_padding))
                 )
             }
         }

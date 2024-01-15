@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Flickr Photo Gallery</string>
+    <string name="refreshed">Odświeżono</string>
+    <string name="author">author: %s</string>
+    <string name="tags">tags: %s</string>
+    <string name="author_prefix">nobody@flickr.com</string>
 </resources>
